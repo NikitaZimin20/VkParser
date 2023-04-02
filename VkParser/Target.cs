@@ -22,9 +22,9 @@ namespace VkParser.src
         }
         public async Task Parse()
         {
-            FindTarget();
+            FindTarget(); //ищем страницу с плейлистами
             Thread.Sleep(1000);
-             await  FindAlbums();
+             await  FindAlbums(); //собираем информацию из плейлистов
         }
         private  void FindTarget()
         {
@@ -51,8 +51,8 @@ namespace VkParser.src
             }
             allPlaylists.Distinct();
             _driver.ExecuteJavaScript($"window.scrollBy(0,{-3000})", "");
-            var bestplaylists= await allPlaylists.FindBestPlaylist(_driver,_target);
-            await bestplaylists.SaveData();
+            var bestplaylists= await allPlaylists.FindBestPlaylist(_driver,_target);//смотреть папку Extenthions
+            await bestplaylists.SaveData();//смотреть папку Extenthions
             _driver.Close();
         }
         private void MakePlaylist(ref List<IWebElement> allPlaylists,string scrollPixels)

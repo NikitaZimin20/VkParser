@@ -24,17 +24,17 @@ namespace VkParser.Extenthions
             foreach (var item in playlist)
             {
                 i++;
-                queue.Enqueue(Task.Run(() =>  Parse(item,driver,target)).Result);
+                queue.Enqueue(Task.Run(async() => await Parse(item,driver,target)).Result);//записваем в очередь результат исполнения парсинга
                 if (i%4==0)
                 {
                     driver.ExecuteJavaScript($"window.scrollBy({pixels},{500})", "");
                     pixels += 500;
                 }  
             }
-            var result = queue.Where(x=>x.Played>50000).ToList();
+            var result = queue.Where(x=>x.Played>50000).ToList();// отсекаем плейлисты с прослушиванием менее 50000
             return result;
         }
-        public static  Task SaveData(this List<PlaylistModel> sortedPlaylist)
+        public static  Task SaveData(this List<PlaylistModel> sortedPlaylist)//записывем данные в бд
         {
             var sql=new SqlCrud();
             foreach (var item in sortedPlaylist)
@@ -43,7 +43,7 @@ namespace VkParser.Extenthions
             }
             return Task.CompletedTask;
         }
-        private static async Task<PlaylistModel> Parse(IWebElement item, IWebDriver driver,string target)
+        private static async Task<PlaylistModel> Parse(IWebElement item, IWebDriver driver,string target)//собираем необходимую информацию
         {
             Regex rgx = new Regex("[^a-zA-Z0-9 -]");
             var finalData = new PlaylistModel();

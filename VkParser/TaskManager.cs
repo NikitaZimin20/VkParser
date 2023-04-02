@@ -13,6 +13,7 @@ namespace VkParser
     {
         public static  Task StartParse(IWebDriver [] driver,string [] targets)
         {
+            //одновременно  запускаем 5 потоков
             Parallel.For(0, targets.Length, async (i) =>
             {
                 driver[i] = new ChromeDriver();
